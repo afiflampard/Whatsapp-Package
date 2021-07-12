@@ -5,19 +5,23 @@ import fs from 'fs';
 class IndexController {
   conn: WAConnection;
 
-  constructor(){
+   constructor(){
     this.conn = new WAConnection();
     this.conn.on('chat-update',chatUpdate => {
       if (chatUpdate.messages && chatUpdate.count) {
         const message = chatUpdate.messages.all()[0]
         console.log (message)
     }
-    })
+    });
+    this.conn.loadAuthInfo('./auth_info.json');
+    this.Runs()
+  }
+  async Runs(){
+    console.clear();
+    this.conn.connect();
   }
 
   public index = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log("Masuk sini");
-    
     this.conn.on('qr', async qr=>{
       qrcode.toDataURL(qr, (err, url)=>{
         res.json({
@@ -58,9 +62,14 @@ class IndexController {
     
   }
 public loadMessage = async (req:Request, res:Response, next:NextFunction):Promise<void> =>{
-  const messages = await this.conn.loadMessages("6281615962254@s.whatsapp.net",25)
-  console.log(messages);
-  
+  let message = []
+  const messages = await this.conn.loadChats(3,null);
+  for (let index = 0; index < messages.chats.length; index++) {
+    message.push(messages.chats[index].messages)
+  }
+  res.status(200).json({
+    message
+  })
   
 }
 }
