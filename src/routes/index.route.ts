@@ -14,7 +14,7 @@ class IndexRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}:id`, this.indexController.index);
     this.router.post(`${this.path}:id`,this.indexController.sendMessage);
-    this.router.get(`${this.path}load/message`, this.indexController.ChatReceived);
+    this.router.get(`${this.path}load/message`, this.indexController.loadMessage);
   }
 }
 

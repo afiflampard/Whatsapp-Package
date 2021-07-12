@@ -37,7 +37,8 @@ class IndexController {
     });
     this.conn.on('open',()=>{
       console.clear();
-      console.log('Connected');
+      const authInfo = this.conn.base64EncodedAuthInfo() 
+      fs.writeFileSync('./auth_info.json', JSON.stringify(authInfo, null, '\t'))
     });
     
     
@@ -56,9 +57,12 @@ class IndexController {
     })
     
   }
-  public ChatReceived = async (req:Request, res:Response, next: NextFunction): Promise<void> =>{
-    
-  }
+public loadMessage = async (req:Request, res:Response, next:NextFunction):Promise<void> =>{
+  const messages = await this.conn.loadMessages("6281615962254@s.whatsapp.net",25)
+  console.log(messages);
+  
+  
+}
 }
 
 export default IndexController;
